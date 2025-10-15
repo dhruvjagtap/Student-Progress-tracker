@@ -1,0 +1,77 @@
+@import "tailwindcss";
+
+:root {
+  --bg-color: #ffffff;
+  --text-color: #000000;
+  --header-bg: #f0f0f0;
+  --button-bg: #e0e0e0;
+  --button-text: #000000;
+  --table-border: #000000;
+  --table-header-bg: #f0f0f0;
+}
+
+body.dark-mode {
+  --bg-color: #121212;
+  --text-color: #ffffff;
+  --header-bg: #1e1e1e;
+  --button-bg: #333333;
+  --button-text: #ffffff;
+  --table-border: #ffffff;
+  --table-header-bg: #1e1e1e;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background-color: var(--header-bg);
+  color: var(--text-color);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  font-family: Arial, sans-serif;
+}
+
+input,
+button {
+  padding: 0.5rem;
+  font-size: 1rem;
+}
+
+button {
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+table th {
+  background-color: #f0f0f0;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+th {
+  background-color: var(--table-header-bg);
+  color: var(--text-color);
+}
+
+td,
+th {
+  border: 1px solid var(--table-border);
+}
