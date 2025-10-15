@@ -12,62 +12,62 @@ const clean = (s: unknown): string =>
 
 const lc = (s: unknown): string => clean(s).toLowerCase();
 
-function parseDurationToMinutes(d: string): number {
-    // expects "H:MM:SS" or "HH:MM:SS"
-    if (!d) return 0;
-    const c = clean(d);
-    if (!c || c === '-' || c.toLowerCase().includes('not')) return 0;
-    const parts = c.split(':').map((p) => Number(p));
-    if (parts.length === 3) {
-        const [h, m, s] = parts;
-        if (Number.isFinite(h) && Number.isFinite(m) && Number.isFinite(s)) {
-            return h * 60 + m + s / 60;
-        }
-    }
-    // sometimes Excel may store as decimal days (0.5 -> 12 hours)
-    const n = Number(c);
-    if (!Number.isNaN(n)) {
-        // treat as hours if ≤ 24, else as minutes
-        return n <= 24 ? n * 60 : n;
-    }
-    return 0;
-}
+// function parseDurationToMinutes(d: string): number {
+//     // expects "H:MM:SS" or "HH:MM:SS"
+//     if (!d) return 0;
+//     const c = clean(d);
+//     if (!c || c === '-' || c.toLowerCase().includes('not')) return 0;
+//     const parts = c.split(':').map((p) => Number(p));
+//     if (parts.length === 3) {
+//         const [h, m, s] = parts;
+//         if (Number.isFinite(h) && Number.isFinite(m) && Number.isFinite(s)) {
+//             return h * 60 + m + s / 60;
+//         }
+//     }
+//     // sometimes Excel may store as decimal days (0.5 -> 12 hours)
+//     const n = Number(c);
+//     if (!Number.isNaN(n)) {
+//         // treat as hours if ≤ 24, else as minutes
+//         return n <= 24 ? n * 60 : n;
+//     }
+//     return 0;
+// }
 
 /**
  * Compute expected lecture duration (minutes) from header text like:
  * Lecture 1 (2025-07-26, 09:58 AM - 12:52 PM)
  */
-function expectedMinutesFromHeader(header: string): number {
-    const match = header.match(/\(([^)]+)\)/);
-    if (!match) return 0;
-    const inside = match[1];
-    const timeMatch = inside.match(
-        /(\d{1,2}:\d{2}\s*(AM|PM)?)\s*-\s*(\d{1,2}:\d{2}\s*(AM|PM)?)/i
-    );
-    if (!timeMatch) return 0;
-    const start = timeMatch[1];
-    const end = timeMatch[3];
+// function expectedMinutesFromHeader(header: string): number {
+//     const match = header.match(/\(([^)]+)\)/);
+//     if (!match) return 0;
+//     const inside = match[1];
+//     const timeMatch = inside.match(
+//         /(\d{1,2}:\d{2}\s*(AM|PM)?)\s*-\s*(\d{1,2}:\d{2}\s*(AM|PM)?)/i
+//     );
+//     if (!timeMatch) return 0;
+//     const start = timeMatch[1];
+//     const end = timeMatch[3];
 
-    const toMin = (t: string): number => {
-        const tt = t.trim();
-        const ampmMatch = tt.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
-        if (ampmMatch) {
-            let h = Number(ampmMatch[1]);
-            const m = Number(ampmMatch[2]);
-            const ap = ampmMatch[3].toUpperCase();
-            if (ap === 'PM' && h !== 12) h += 12;
-            if (ap === 'AM' && h === 12) h = 0;
-            return h * 60 + m;
-        }
-        const parts = tt.split(':').map(Number);
-        return parts.length >= 2 ? parts[0] * 60 + parts[1] : 0;
-    };
+//     const toMin = (t: string): number => {
+//         const tt = t.trim();
+//         const ampmMatch = tt.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+//         if (ampmMatch) {
+//             let h = Number(ampmMatch[1]);
+//             const m = Number(ampmMatch[2]);
+//             const ap = ampmMatch[3].toUpperCase();
+//             if (ap === 'PM' && h !== 12) h += 12;
+//             if (ap === 'AM' && h === 12) h = 0;
+//             return h * 60 + m;
+//         }
+//         const parts = tt.split(':').map(Number);
+//         return parts.length >= 2 ? parts[0] * 60 + parts[1] : 0;
+//     };
 
-    const startMin = toMin(start);
-    const endMin = toMin(end);
-    const diff = endMin - startMin;
-    return diff > 0 ? diff : 0;
-}
+//     const startMin = toMin(start);
+//     const endMin = toMin(end);
+//     const diff = endMin - startMin;
+//     return diff > 0 ? diff : 0;
+// }
 
 // --- Attendance Summary ------------------------------------------------------
 
@@ -81,15 +81,82 @@ export type AttendanceSummary = {
 /**
  * Compute attendance summary from parsed attendance sheet.
  */
+// export function computeAttendanceSummary(
+//     attendanceRows: ExcelRow[],
+//     headers: string[],
+//     thresholdRatio = 0.1
+// ): Record<string, AttendanceSummary> {
+//     const lectureCols = headers
+//         .map((h, idx) => ({ h, idx }))
+//         .filter((p) => lc(p.h).startsWith('lecture') || lc(p.h).includes('lecture'))
+//         .map((p) => ({ header: p.h, idx: p.idx }));
+
+//     const totalLectures = lectureCols.length;
+//     const summaryByEmail = new Map<string, AttendanceSummary>();
+
+//     for (const row of attendanceRows) {
+//         const allKeys = Object.keys(row);
+//         const emailKey = allKeys.find((k) => lc(k).includes('email'));
+//         const nameKey = allKeys.find(
+//             (k) =>
+//                 lc(k).includes('user name') ||
+//                 lc(k).includes('student name') ||
+//                 lc(k) === 'name'
+//         );
+
+//         const email = clean(row[emailKey ?? '']) || '';
+//         const name = clean(row[nameKey ?? '']) || '';
+
+//         if (!email) continue;
+
+//         let attended = 0;
+//         for (const col of lectureCols) {
+//             const val = row[col.header];
+//             const minutes = parseDurationToMinutes(clean(val));
+//             const expected = expectedMinutesFromHeader(col.header) || 0;
+//             if (expected > 0) {
+//                 if (minutes >= expected * thresholdRatio) attended += 1;
+//             } else if (minutes > 0) {
+//                 attended += 1;
+//             }
+//         }
+
+//         summaryByEmail.set(email, {
+//             name: name || email.split('@')[0],
+//             email,
+//             attended,
+//             totalLectures,
+//         });
+//     }
+
+//     return Object.fromEntries(summaryByEmail);
+// }
+
+function isAttended(val: unknown): boolean {
+    if (!val) return false;
+    const s = String(val).trim();
+    if (!s || s.toLowerCase().includes('not') || s === '#N/A') return false;
+
+    // Check if it is a duration string H:MM:SS or HH:MM:SS
+    if (/^\d{1,2}:\d{1,2}:\d{1,2}$/.test(s)) return true;
+
+    // Check if it is a number (minutes)
+    const n = Number(s);
+    if (!isNaN(n) && n > 0) return true;
+
+    return false;
+}
+
+
 export function computeAttendanceSummary(
     attendanceRows: ExcelRow[],
-    headers: string[],
-    thresholdRatio = 1.0
+    headers: string[]
 ): Record<string, AttendanceSummary> {
+    // Identify lecture columns
     const lectureCols = headers
-        .map((h, idx) => ({ h, idx }))
+        .map((h, idx) => ({ h: clean(h), idx }))
         .filter((p) => lc(p.h).startsWith('lecture') || lc(p.h).includes('lecture'))
-        .map((p) => ({ header: p.h, idx: p.idx }));
+        .map((p) => p.h);
 
     const totalLectures = lectureCols.length;
     const summaryByEmail = new Map<string, AttendanceSummary>();
@@ -111,15 +178,10 @@ export function computeAttendanceSummary(
 
         let attended = 0;
         for (const col of lectureCols) {
-            const val = row[col.header];
-            const minutes = parseDurationToMinutes(clean(val));
-            const expected = expectedMinutesFromHeader(col.header) || 0;
-            if (expected > 0) {
-                if (minutes >= expected * thresholdRatio) attended += 1;
-            } else if (minutes > 0) {
-                attended += 1;
-            }
+            const val = row[col];
+            if (isAttended(val)) attended++;
         }
+
 
         summaryByEmail.set(email, {
             name: name || email.split('@')[0],
