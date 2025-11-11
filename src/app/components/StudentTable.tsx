@@ -1,53 +1,58 @@
-'use client';
-import React from 'react';
-import * as XLSX from 'xlsx';
+// src/app/components/StudentTable.tsx
+import React from "react";
 
-type Student = {
+interface Student {
   name: string;
+  rollNo: string;
+  division: string;
   email: string;
-  avgCoding: number;
-  attended: number;
-  totalLectures: number;
-};
+  sessionsAttended?: string;
+  testsAppeared?: string;
+  avgCoding?: number;
+}
 
-type Props = { data: Student[] };
+interface Props {
+  data: Student[];
+}
 
-
-export default function StudentTable({ data }: Props) {
-  const downloadExcel = () => {
-    const ws = XLSX.utils.json_to_sheet(data);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'StudentData');
-    XLSX.writeFile(wb, 'GFG_Combined_Data.xlsx');
-  };
+const StudentTable: React.FC<Props> = ({ data }) => {
+  if (!data || data.length === 0) return null;
 
   return (
-    <div>
-      <button onClick={downloadExcel} style={{ marginBottom: 12 }}>
-        Download Excel
-      </button>
-      <table border={1} cellPadding={8} style={{ width: '100%', borderCollapse: 'collapse' }}>
-        <thead>
+    <div className="mt-6 overflow-x-auto rounded-2xl shadow-sm border border-gray-200">
+      <table className="min-w-full text-sm text-left">
+        <thead className="bg-gray-100 text-gray-700 uppercase font-semibold">
           <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Avg Coding Score</th>
-            <th>Attendance (attended / total)</th>
+            <th className="px-4 py-2">Name</th>
+            <th className="px-4 py-2">Roll No</th>
+            <th className="px-4 py-2">Division</th>
+            <th className="px-4 py-2">Email</th>
+            <th className="px-4 py-2">Sessions Attended</th>
+            <th className="px-4 py-2">Tests Appeared</th>
+            {/* <th className="px-4 py-2">Avg Coding Score</th> */}
           </tr>
         </thead>
         <tbody>
           {data.map((s, i) => (
-            <tr key={`${s.email}-${i}`}>
-              <td>{s.name}</td>
-              <td>{s.email}</td>
-              <td>{s.avgCoding}</td>
-              <td>
-                {s.attended}/{s.totalLectures}
-              </td>
+            <tr
+              key={i}
+              className={`${i % 2 === 0 ? "bg-white" : "bg-gray-50"} border-t`}
+            >
+              <td className="px-4 py-2">{s.name}</td>
+              <td className="px-4 py-2">{s.rollNo}</td>
+              <td className="px-4 py-2">{s.division}</td>
+              <td className="px-4 py-2">{s.email}</td>
+              <td className="px-4 py-2">{s.sessionsAttended}</td>
+              <td className="px-4 py-2">{s.testsAppeared}</td>
+              {/* <td className="px-4 py-2">
+                {s.avgCoding ? s.avgCoding.toFixed(2) : "-"}
+              </td> */}
             </tr>
           ))}
         </tbody>
       </table>
     </div>
   );
-}
+};
+
+export default StudentTable;
