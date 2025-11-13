@@ -7,7 +7,7 @@ import StudentTable from "./StudentTable";
 import { Student } from "@/types/Student";
 import * as XLSX from "xlsx";
 
-export default function UploadSection() {
+export default function GFGUploadSection() {
   const [javaFile, setJavaFile] = useState<File | null>(null);
   const [cppFile, setCppFile] = useState<File | null>(null);
   const [rollCallFile, setRollCallFile] = useState<File | null>(null);

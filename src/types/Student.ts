@@ -34,3 +34,12 @@ export interface Student {
     testsAppeared: string;    // "4 out of 5" or "-"
 }
 
+export interface HitbullseyeStudent {
+    name: string;
+    rollNo: string;
+    email: string;
+    division?: string;
+    testsAppeared?: string;
+    recentAptitudeMarks?: string | number;
+    recentCodingScore?: string | number;
+}

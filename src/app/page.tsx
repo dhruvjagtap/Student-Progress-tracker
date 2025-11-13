@@ -1,23 +1,13 @@
 // src/app/page.tsx
-import UploadSection from "./components/UploadSection";
-
+import GFGUploadSection from "./components/GFGUploadSection";
+import HitbullseyeUploadSection from "./components/HitbullseyeUploadSection";
 export default function Page() {
   return (
     <main className="min-h-screen bg-gray-50">
-      <UploadSection />
+      <GFGUploadSection />
+      <hr className="my-6 border-gray-400" />
+      <HitbullseyeUploadSection />
     </main>
   );
 }
 
-// 'use client';
-// import UploadSection from './components/UploadSection';
-
-// export default function Page() {
-//   return (
-//     <div style={{ padding: 16 }}>
-//       <h1>GFG Student Summary (Java + CPP)</h1>
-//       <p>Upload Java and CPP workbooks (first two sheets are used). Then click Merge & Show.</p>
-//       <UploadSection />
-//     </div>
-//   );
-// }
