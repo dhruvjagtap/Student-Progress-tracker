@@ -164,7 +164,7 @@ export function parseGFGWorkbook(wb: XLSX.WorkBook): Record<string, RawResult> {
             const cell = assessmentSheet[addr];
             const val = cell ? String(cell.v).trim() : "";
 
-            if (val !== "" && val !== "-" && val !== "#N/A") {
+            if (val !== "" && val !== "-" && val !== "#N/A" && val !== "Not Attended") {
                 appeared++;
                 const num = Number(val.replace(/[^\d.-]/g, ""));
                 if (!Number.isNaN(num)) scores.push(num);
@@ -204,8 +204,13 @@ export function parseGFGWorkbook(wb: XLSX.WorkBook): Record<string, RawResult> {
 
         const totalSessions = a?.totalSessions ?? 0;
         const sessionsAttended = a?.sessionsAttended ?? 0;
-        const totalTests = s?.totalTests ?? 0;
-        const testsAppeared = s?.testsAppeared ?? 0;
+        // Determine if this student exists in the assessment sheet
+        const hasAssessment = !!s;
+
+        // Use actual values if available, otherwise assign default (0 out of global total)
+        const totalTests = hasAssessment ? (s?.totalTests ?? codingColIndexes.length) : codingColIndexes.length;
+        const testsAppeared = hasAssessment ? (s?.testsAppeared ?? 0) : 0;
+
         const avgCoding =
             typeof s?.avgCoding === "number" ? s.avgCoding : null;
 
