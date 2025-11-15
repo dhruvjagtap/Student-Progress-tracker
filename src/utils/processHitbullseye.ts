@@ -53,11 +53,18 @@ export async function processHitbullseyeFile(
         });
 
         // Latest marks
+        const lastOverall = row[overallCols[overallCols.length - 1]];
         const recentAptitudeMarks =
-            row[overallCols[overallCols.length - 1]] ?? "-";
+            lastOverall === "-" || lastOverall === null || lastOverall === undefined
+                ? "AB"
+                : lastOverall;
 
+        const lastWe = row[weScoreCols[weScoreCols.length - 1]];
         const recentCodingScore =
-            row[weScoreCols[weScoreCols.length - 1]] ?? "-";
+            lastWe === "-" || lastWe === null || lastWe === undefined
+                ? "AB"
+                : lastWe;
+
 
         return {
             name,

@@ -54,6 +54,8 @@ export async function processGFGFiles(javaFile: File, cppFile: File, rollCallFil
         const javaEntry = javaKey ? javaMap[javaKey] : undefined;
         const cppEntry = cppKey ? cppMap[cppKey] : undefined;
 
+        const anyJavaEntry = Object.values(javaMap)[0];
+
         // If none found in both
         if (!javaEntry && !cppEntry) {
             results.push({
@@ -61,8 +63,8 @@ export async function processGFGFiles(javaFile: File, cppFile: File, rollCallFil
                 rollNo,
                 division,
                 email: emailRaw || "",
-                sessionsAttended: "-",
-                testsAppeared: "-",
+                sessionsAttended: `0 out of ${anyJavaEntry.totalSessions}`,
+                testsAppeared: `0 out of ${anyJavaEntry.totalSessions}`,
             });
             continue;
         }
