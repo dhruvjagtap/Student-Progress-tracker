@@ -5,6 +5,7 @@ import { processHitbullseyeFile } from "@/utils/processHitbullseye";
 import { HitbullseyeStudent } from "@/types/Student";
 import HitbullseyeTable from "./HitbullseyeTable";
 
+
 export default function HitbullseyeUploadSection() {
   const [hitFile, setHitFile] = useState<File | null>(null);
   const [finalList, setFinalList] = useState<HitbullseyeStudent[]>([]);
@@ -18,9 +19,9 @@ export default function HitbullseyeUploadSection() {
   const handleProcess = async () => {
     if (!hitFile) return;
     setIsProcessing(true);
+
     try {
       const students = await processHitbullseyeFile(hitFile);
-      console.log("Processed Hitbullseye data:", students);
       setFinalList(students);
     } catch (err) {
       console.error("Processing error", err);
@@ -43,10 +44,31 @@ export default function HitbullseyeUploadSection() {
       <h2 className="text-xl font-semibold mb-2">Upload Hitbullseye File</h2>
 
       <div className="p-4 flex flex-col sm:flex-row gap-4">
-        <label className="flex flex-col gap-1">
+        <div className="flex flex-col gap-1">
           <span>Upload Hitbullseye File:</span>
-          <input type="file" accept=".xlsx" onChange={handleFileChange} />
-        </label>
+
+          {!hitFile ? (
+            <label className="px-4 py-2 bg-gray-200 rounded-md cursor-pointer hover:bg-gray-300 transition w-fit">
+              Choose File
+              <input
+                type="file"
+                accept=".xlsx"
+                className="hidden"
+                onChange={handleFileChange}
+              />
+            </label>
+          ) : (
+            <div className="flex items-center gap-2">
+              <span className="text-green-700 font-medium">{hitFile.name}</span>
+              <button
+                className="text-red-600 font-bold hover:text-red-800"
+                onClick={() => setHitFile(null)}
+              >
+                ✖
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       <button
@@ -70,6 +92,7 @@ export default function HitbullseyeUploadSection() {
               Download Excel
             </button>
           </div>
+
           <HitbullseyeTable students={finalList} />
         </div>
       )}

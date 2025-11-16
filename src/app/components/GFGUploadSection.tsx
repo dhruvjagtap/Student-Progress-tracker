@@ -51,34 +51,87 @@ export default function GFGUploadSection() {
       <h2 className="text-xl font-semibold mb-2">Upload GeeksforGeeks Files</h2>
 
       {/* Upload inputs */}
-      <div className="p-4 flex flex-col sm:flex-row gap-4">
-        <label className="flex flex-col gap-1">
-          <span>Upload Java File:</span>
-          <input
-            type="file"
-            accept=".xlsx"
-            onChange={(e) => handleFileChange(e, setJavaFile)}
-          />
-        </label>
+<div className="p-4 flex flex-col sm:flex-row gap-4">
 
-        <label className="flex flex-col gap-1">
-          <span>Upload C++ File:</span>
-          <input
-            type="file"
-            accept=".xlsx"
-            onChange={(e) => handleFileChange(e, setCppFile)}
-          />
-        </label>
-
-        <label className="flex flex-col gap-1">
-          <span>Upload Roll Call File:</span>
-          <input
-            type="file"
-            accept=".xlsx"
-            onChange={(e) => handleFileChange(e, setRollCallFile)}
-          />
-        </label>
+  {/* Java Upload */}
+  <div className="flex flex-col gap-1">
+    <span>Java File:</span>
+    {!javaFile ? (
+      <label className="px-4 py-2 bg-gray-200 rounded-md cursor-pointer hover:bg-gray-300 transition">
+        Choose File
+        <input
+          type="file"
+          accept=".xlsx"
+          className="hidden"
+          onChange={(e) => handleFileChange(e, setJavaFile)}
+        />
+      </label>
+    ) : (
+      <div className="flex items-center gap-2">
+        <span className="text-green-700 font-medium">{javaFile.name}</span>
+        <button
+          className="text-red-600 font-bold hover:text-red-800"
+          onClick={() => setJavaFile(null)}
+        >
+          ✖
+        </button>
       </div>
+    )}
+  </div>
+
+  {/* C++ Upload */}
+  <div className="flex flex-col gap-1">
+    <span>C++ File:</span>
+    {!cppFile ? (
+      <label className="px-4 py-2 bg-gray-200 rounded-md cursor-pointer hover:bg-gray-300 transition">
+        Choose File
+        <input
+          type="file"
+          accept=".xlsx"
+          className="hidden"
+          onChange={(e) => handleFileChange(e, setCppFile)}
+        />
+      </label>
+    ) : (
+      <div className="flex items-center gap-2">
+        <span className="text-green-700 font-medium">{cppFile.name}</span>
+        <button
+          className="text-red-600 font-bold hover:text-red-800"
+          onClick={() => setCppFile(null)}
+        >
+          ✖
+        </button>
+      </div>
+    )}
+  </div>
+
+  {/* Roll Call Upload */}
+  <div className="flex flex-col gap-1">
+    <span>Roll Call File:</span>
+    {!rollCallFile ? (
+      <label className="px-4 py-2 bg-gray-200 rounded-md cursor-pointer hover:bg-gray-300 transition">
+        Choose File
+        <input
+          type="file"
+          accept=".xlsx"
+          className="hidden"
+          onChange={(e) => handleFileChange(e, setRollCallFile)}
+        />
+      </label>
+    ) : (
+      <div className="flex items-center gap-2">
+        <span className="text-green-700 font-medium">{rollCallFile.name}</span>
+        <button
+          className="text-red-600 font-bold hover:text-red-800"
+          onClick={() => setRollCallFile(null)}
+        >
+          ✖
+        </button>
+      </div>
+    )}
+  </div>
+</div>
+
 
       {/* Process button */}
       <button
