@@ -1,5 +1,49 @@
 @import "tailwindcss";
 
+/* reset essentials */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* :root { */
+/* header height used by layout */
+/* --header-height: 64px; */
+/* adjust if your header height differs */
+/* } */
+
+/* Ensure proper viewport height and avoid weird mobile vh behaviour */
+/* html,
+body,
+#__next {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+} */
+
+/* Allow scrolling only if content overflows; avoid overflow:hidden */
+body {
+  min-height: 100dvh;
+  /* uses dynamic viewport height */
+  overflow-y: auto;
+}
+
+/* Optional: remove tiny default focus outlines (be careful for accessibility) */
+/* Keep accessible focus if you want: replace with :focus-visible rules */
+/* :focus {
+  outline: 2px solid transparent;
+} */
+
+/* Utility to visually debug overflow during development (remove later) */
+/* 
+.debug-outline * {
+  outline: 1px dashed rgba(255, 0, 0, 0.12);
+} */
+
+
 :root {
   --bg-color: #ffffff;
   --text-color: #000000;
