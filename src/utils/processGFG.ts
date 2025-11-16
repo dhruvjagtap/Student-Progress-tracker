@@ -64,7 +64,7 @@ export async function processGFGFiles(javaFile: File, cppFile: File, rollCallFil
                 division,
                 email: emailRaw || "",
                 sessionsAttended: `0 out of ${anyJavaEntry.totalSessions}`,
-                testsAppeared: `0 out of ${anyJavaEntry.totalSessions}`,
+                testsAppeared: `0 out of ${anyJavaEntry.testsAppeared}`,
             });
             continue;
         }
