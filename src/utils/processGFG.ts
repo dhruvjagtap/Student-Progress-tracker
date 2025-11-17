@@ -64,7 +64,7 @@ export async function processGFGFiles(javaFile: File, cppFile: File, rollCallFil
                 division,
                 email: emailRaw || "",
                 sessionsAttended: `0 out of ${anyJavaEntry.totalSessions}`,
-                testsAppeared: `0 out of ${anyJavaEntry.testsAppeared}`,
+                testsAppeared: `0 out of ${anyJavaEntry.totalTests}`,
             });
             continue;
         }
@@ -89,9 +89,15 @@ export async function processGFGFiles(javaFile: File, cppFile: File, rollCallFil
         }
 
         // format output strings
-        const sAtt = (chosen && chosen.totalSessions && typeof chosen.sessionsAttended === "number")
-            ? `${chosen.sessionsAttended} out of ${chosen.totalSessions}`
-            : "-";
+        // const sAtt = (chosen && chosen.totalSessions && typeof chosen.sessionsAttended === "number")
+        //     ? `${chosen.sessionsAttended} out of ${chosen.totalSessions}`
+        //     : "-";
+
+        const sAtt =
+            chosen && typeof chosen.sessionsAttended === "number" && typeof chosen.totalSessions === "number"
+                ? `${chosen.sessionsAttended} out of ${chosen.totalSessions ?? 0}`
+                : "-";
+
 
         const tApp = (chosen && typeof chosen.testsAppeared === "number")
             ? `${chosen.testsAppeared} out of ${chosen.totalTests ?? 0}`

@@ -9,4 +9,5 @@ export interface RawResult {
     totalTests: number;
     testsAppeared: number;
     avgCodingScore?: number | null;
+
 }

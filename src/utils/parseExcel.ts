@@ -162,9 +162,10 @@ export function parseGFGWorkbook(wb: XLSX.WorkBook): Record<string, RawResult> {
         codingColIndexes.forEach((colIdx) => {
             const addr = XLSX.utils.encode_cell({ r, c: colIdx });
             const cell = assessmentSheet[addr];
-            const val = cell ? String(cell.v).trim() : "";
+            const val = cell ? String(cell.v).trim().toLowerCase() : "";
+            const absent = "Not Attended";
 
-            if (val !== "" && val !== "-" && val !== "#N/A" && val !== "Not Attended") {
+            if (val !== "" && val !== "-" && val !== "#N/A" && val !== absent.trim().toLowerCase() && val !== "Not Attended" && val !== "Not attended") {
                 appeared++;
                 const num = Number(val.replace(/[^\d.-]/g, ""));
                 if (!Number.isNaN(num)) scores.push(num);
@@ -202,8 +203,11 @@ export function parseGFGWorkbook(wb: XLSX.WorkBook): Record<string, RawResult> {
         const rollNo = a?.rollNo || s?.rollNo || "";
         const division = a?.division;
 
-        const totalSessions = a?.totalSessions ?? 0;
-        const sessionsAttended = a?.sessionsAttended ?? 0;
+        const hasAttendance = !!a;
+
+        const totalSessions = hasAttendance ? (a?.totalSessions ?? lectureColumns.length) : lectureColumns.length;
+        const sessionsAttended = hasAttendance ? (a?.sessionsAttended ?? 0) : 0;
+
         // Determine if this student exists in the assessment sheet
         const hasAssessment = !!s;
 
@@ -213,6 +217,7 @@ export function parseGFGWorkbook(wb: XLSX.WorkBook): Record<string, RawResult> {
 
         const avgCoding =
             typeof s?.avgCoding === "number" ? s.avgCoding : null;
+
 
         const mapKey =
             (email && normalizeEmail(email)) ||
@@ -229,6 +234,7 @@ export function parseGFGWorkbook(wb: XLSX.WorkBook): Record<string, RawResult> {
             totalTests,
             testsAppeared,
             avgCodingScore: avgCoding,
+
         };
     });
 
